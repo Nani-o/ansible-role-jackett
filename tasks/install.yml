@@ -1,0 +1,52 @@
+---
+- name: Install requirements
+  package:
+    name: "{{ jackett_requirements }}"
+    state: latest
+
+- name: Get artifact url
+  uri:
+    url: https://api.github.com/repos/Jackett/Jackett/releases/latest
+    return_content: yes
+  register: webpage
+
+- name: Extracting json
+  set_fact:
+    json_answer: "{{ webpage.content | from_json }}"
+
+- name: Add service user
+  user:
+    name: "{{ jackett_user }}"
+    state: present
+
+- name: Download release archive
+  get_url:
+    url: "{{ item.browser_download_url }}"
+    dest: "/home/{{ jackett_user }}/"
+    owner: "{{ jackett_user }}"
+  with_items: "{{ json_answer.assets }}"
+  when: "item.name == jackett_release_file_name"
+  register: download_archive
+  loop_control:
+    label: "{{ item.browser_download_url }}"
+
+- name: Untar binaries
+  unarchive:
+    remote_src: yes
+    src: "/home/{{ jackett_user }}/{{ jackett_release_file_name }}"
+    dest: /usr/local/bin
+  register: install_binaries
+#  when: "download_archive | changed"
+  notify:
+    - restart jackett
+
+- name: Installing systemd service
+  template:
+    src: jackett.service.j2
+    dest: /etc/systemd/system/jackett.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - systemd daemon-reload
+    - restart jackett

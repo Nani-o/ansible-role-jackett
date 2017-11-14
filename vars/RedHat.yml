@@ -1,0 +1,6 @@
+---
+jackett_mono_extra_packages:
+  - mono-locale-extras
+jackett_requirements:
+  - systemd
+  - libcurl-devel

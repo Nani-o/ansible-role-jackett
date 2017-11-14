@@ -1,0 +1,6 @@
+---
+jackett_mono_extra_packages:
+  - ca-certificates-mono
+jackett_requirements:
+  - systemd
+  - libcurl4-openssl-dev

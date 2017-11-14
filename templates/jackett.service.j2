@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Jackett Service
+After=network.target
+
+[Service]
+Type=simple
+User={{ jackett_user }}
+ExecStart=/usr/bin/mono --debug /usr/local/bin/Jackett/JackettConsole.exe --NoRestart
+
+[Install]
+WantedBy=multi-user.target

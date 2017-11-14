@@ -1,0 +1,15 @@
+---
+- block:
+  - name: Include OS-specific variables.
+    include_vars: "{{ ansible_os_family }}.yml"
+
+  - name: Include mono role
+    include_role:
+      name: mono
+    vars:
+      mono_extra_packages: "{{ jackett_mono_extra_packages }}"
+
+  - name: Installing jackett
+    import_tasks: install.yml
+  tags:
+    - jackett

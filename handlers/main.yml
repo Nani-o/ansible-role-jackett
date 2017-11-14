@@ -1,0 +1,10 @@
+---
+- name: systemd daemon-reload
+  systemd:
+    daemon_reload: yes
+
+- name: restart jackett
+  systemd:
+    name: jackett
+    state: restarted
+    enabled: yes
