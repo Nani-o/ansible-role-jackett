@@ -6,13 +6,11 @@
         name: lxd-deploy
         path: "{{ playbook_dir }}/../../"
   tasks:
-    - name: Make sure folders exists
+    - name: Create folders
       file:
-        path: "{{ item.path }}"
+        path: "{{ item }}"
         state: directory
-      with_items:
-        - "{{ git_repos }}"
-        - "{{ file_downloads }}"
+      with_items: "{{ (git_repos | default([]) + file_downloads | default([])) | map(attribute='path') | list }}"
 
     - name: Clone/Pull of repositories
       git:
