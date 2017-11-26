@@ -1,0 +1,30 @@
+---
+- hosts: localhost
+  vars:
+    git_repos:
+      - src: https://github.com/Nani-o/ansible-role-mono
+        name: lxd-deploy
+        path: "{{ playbook_dir }}/../../"
+  tasks:
+    - name: Make sure folders exists
+      file:
+        path: "{{ item.path }}"
+        state: directory
+      with_items:
+        - "{{ git_repos }}"
+        - "{{ file_downloads }}"
+
+    - name: Clone/Pull of repositories
+      git:
+        repo: "{{ item.src }}"
+        dest: "{{ item.path }}/{{ item.name }}"
+        clone: yes
+        update: yes
+        force: yes
+      with_items: "{{ git_repos }}"
+
+    - name: Download files
+      get_url:
+        url: "{{ item.src }}"
+        dest: "{{ item.path }}/{{ item.name }}"
+      with_items: "{{ file_downloads }}"
