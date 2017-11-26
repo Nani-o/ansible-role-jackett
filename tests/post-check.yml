@@ -7,10 +7,6 @@
         return_content: yes
       register: webpage
 
-    - name: Debug
-      debug:
-        var: webpage.content
-
     - name: Fail if not Jackett in webpage
       fail:
       when: "'<title>Jackett</title>' not in webpage.content"
