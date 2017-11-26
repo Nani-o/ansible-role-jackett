@@ -4,7 +4,7 @@
     git_repos:
       - src: https://github.com/Nani-o/ansible-role-mono
         name: lxd-deploy
-        path: "{{ playbook_dir }}/../../"
+        path: "{{ playbook_dir }}/roles"
   tasks:
     - name: Create folders
       file:
