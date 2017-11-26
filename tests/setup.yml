@@ -19,10 +19,10 @@
         clone: yes
         update: yes
         force: yes
-      with_items: "{{ git_repos }}"
+      with_items: "{{ git_repos | default([]) }}"
 
     - name: Download files
       get_url:
         url: "{{ item.src }}"
         dest: "{{ item.path }}/{{ item.name }}"
-      with_items: "{{ file_downloads }}"
+      with_items: "{{ file_downloads | default([]) }}"
