@@ -13,8 +13,6 @@ env:
   - lxd_container_alias: debian/jessie/amd64
 
 install:
-  # Installing latest ansible
-  - sudo -H pip install ansible
   # Cloning testing template
   - sudo mkdir /etc/ansible
   - sudo chown -R "${USER}:" /etc/ansible
