@@ -6,13 +6,12 @@
 
 - name: Get artifact url
   uri:
-    url: https://api.github.com/repos/Jackett/Jackett/releases/latest
-    return_content: yes
+    url: https://github.com/Jackett/Jackett/releases/latest
   register: webpage
 
-- name: Extracting json
+- name: Get actual url
   set_fact:
-    json_answer: "{{ webpage.content | from_json }}"
+    jackett_release_url: "{{ webpage.url | replace('tag', 'download') }}/{{ jackett_release_file_name }}"
 
 - name: Add service user
   user:
@@ -21,14 +20,9 @@
 
 - name: Download release archive
   get_url:
-    url: "{{ item.browser_download_url }}"
+    url: "{{ jackett_release_url }}"
     dest: "/home/{{ jackett_user }}/"
     owner: "{{ jackett_user }}"
-  with_items: "{{ json_answer.assets }}"
-  when: "item.name == jackett_release_file_name"
-  register: download_archive
-  loop_control:
-    label: "{{ item.browser_download_url }}"
 
 - name: Untar binaries
   unarchive:
@@ -36,7 +30,6 @@
     src: "/home/{{ jackett_user }}/{{ jackett_release_file_name }}"
     dest: /usr/local/bin
   register: install_binaries
-#  when: "download_archive | changed"
   notify:
     - restart jackett
 
