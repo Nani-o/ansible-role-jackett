@@ -32,7 +32,7 @@
     dest: /usr/local/bin
     extra_opts:
       - "--no-same-owner"
-  when: jackett_downloading_release | changed
+  when: jackett_downloading_release is changed
   notify:
     - restart jackett
 
