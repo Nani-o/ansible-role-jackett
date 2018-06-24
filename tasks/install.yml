@@ -29,6 +29,8 @@
     remote_src: yes
     src: "/home/{{ jackett_user }}/{{ jackett_release_file_name }}"
     dest: /usr/local/bin
+    extra_opts:
+      - "--no-same-owner"
   notify:
     - restart jackett
 
