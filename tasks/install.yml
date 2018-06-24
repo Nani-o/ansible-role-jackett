@@ -23,14 +23,16 @@
     url: "{{ jackett_release_url }}"
     dest: "/home/{{ jackett_user }}/"
     owner: "{{ jackett_user }}"
+  register: jackett_downloading_release
 
-- name: Download and untar binaries
+- name: Untar binaries
   unarchive:
     remote_src: yes
     src: "/home/{{ jackett_user }}/{{ jackett_release_file_name }}"
     dest: /usr/local/bin
     extra_opts:
       - "--no-same-owner"
+  when: jackett_downloading_release | changed
   notify:
     - restart jackett
 
