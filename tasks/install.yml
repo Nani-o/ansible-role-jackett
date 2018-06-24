@@ -18,13 +18,17 @@
     name: "{{ jackett_user }}"
     state: present
 
+- name: Download release archive
+  get_url:
+    url: "{{ jackett_release_url }}"
+    dest: "/home/{{ jackett_user }}/"
+    owner: "{{ jackett_user }}"
+
 - name: Download and untar binaries
   unarchive:
     remote_src: yes
-    src: "{{ jackett_release_url }}"
+    src: "/home/{{ jackett_user }}/{{ jackett_release_file_name }}"
     dest: /usr/local/bin
-    extra_opts:
-      - "--no-same-owner"
   notify:
     - restart jackett
 
